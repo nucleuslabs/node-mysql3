@@ -1,16 +1,13 @@
-import {ResultPromise} from './types';
+import {ResultPromise, StringMap} from './types';
 
 export default class ResultWrapper {
-    result: ResultPromise
+    result: ResultPromise;
     
     constructor(resultPromise: ResultPromise) {
         this.result = resultPromise;
     }
-
-    /**
-     * @returns {Promise<TextRow>}
-     */
-    async fetchRow() {
+    
+    async fetchRow(): Promise<StringMap|null> {
         // fetch one row and then release the connection rather than
         // waiting for all the rows?
         let [rows,fields] = await this.result;
@@ -18,40 +15,28 @@ export default class ResultWrapper {
         if(rows.length > 1) throw new Error("You should only query for one row when using `fetchRow`");
         return rows[0];
     }
-
-    /**
-     * @returns {Promise<TextRow[]>}
-     */
-    fetchAll() {
+    
+    fetchAll(): Promise<StringMap[]> {
         return this.result.then(([rows, fields]) => rows);
     }
-
-    /**
-     * @returns {Promise<String|Number|Boolean|null>}
-     */
-    async fetchValue() {
+    
+    async fetchValue(): Promise<any> {
         let [rows,fields] = await this.result;
         if(!rows.length) return null;
         if(rows.length > 1) throw new Error("You should only query for one row when using `fetchValue`");
         if(fields.length > 1) throw new Error("You should only query for one field when using `fetchValue`");
         return rows[0][fields[0].name];
     }
-
-    /**
-     * @returns {Promise<Array<String|Number|Boolean|null>>}
-     */
-    async fetchColumn() {
+    
+    async fetchColumn(): Promise<any[]> {
         let [rows,fields] = await this.result;
         if(!rows.length) return [];
         if(fields.length > 1) throw new Error("You should only query for one field when using `fetchColumn`");
         const name = fields[0].name;
         return rows.map(r => r[name]);
     }
-
-    /**
-     * @returns {Promise<{}>}
-     */
-    async fetchPairs() {
+    
+    async fetchPairs(): Promise<StringMap> {
         let [rows,fields] = await this.result;
         if(fields.length !== 2) throw new Error("`fetchPairs` expects exactly 2 columns");
         if(!rows.length) return {};

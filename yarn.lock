@@ -165,6 +165,10 @@ string_decoder@~1.0.3:
   dependencies:
     safe-buffer "~5.1.0"
 
+typescript@^3.0.1:
+  version "3.0.1"
+  resolved "http://code.nucleuslabs.com:4873/typescript/-/typescript-3.0.1.tgz#43738f29585d3a87575520a4b93ab6026ef11fdb"
+
 util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "http://code.nucleuslabs.com:4873/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"

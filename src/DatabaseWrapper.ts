@@ -4,17 +4,22 @@ import ResultWrapper from './ResultWrapper';
 import fromEmitter from '@async-generators/from-emitter';
 import formatSql from './formatSql';
 import {setDefaults} from './util';
-import {Field, QueryParams, ResultPromise} from './types';
+import {AnyObject, Field, QueryParams, ResultPromise} from './types';
 import {Pool, PoolConfig, TypeCast} from 'mysql';
 
 export function escapeIdString(id: string) {
     return '`' + String(id).replace(/`/g,'``') + '`';
 }
 
+interface DatabaseOptions extends PoolConfig {
+    sqlMode: string|string[], 
+    foreignKeyChecks: boolean,
+}
+
 export default class DatabaseWrapper {
     pool: any;
 
-    constructor({sqlMode, foreignKeyChecks, ...options}: {sqlMode: string|string[], foreignKeyChecks: boolean, options: PoolConfig}) {
+    constructor({sqlMode, foreignKeyChecks, ...options}: DatabaseOptions) {
         setDefaults(options, {
             timezone: 'UTC',
             queryFormat: formatSql,
@@ -68,7 +73,7 @@ export default class DatabaseWrapper {
         return res;
     }
     
-    escapeValue(value: any): string {
+    escape(value: any): string {
         return this.pool.escape(value);
     }
     
