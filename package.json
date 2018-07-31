@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "license": "UNLICENSED",
     "private": true,
-    "main": "src/DatabaseWrapper.ts",
+    "main": "DatabaseWrapper",
     "dependencies": {
         "@async-generators/from-emitter": "^0.3.0",
         "mysql2": "^1.5.3"

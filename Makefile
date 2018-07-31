@@ -1,9 +1,9 @@
-NM := node_modules/.bin
+MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
-
+NM := node_modules/.bin
 .PHONY: build clean test
 
-build: node_modules/.yarn-integrity
+build: node_modules/.yarn-integrity dist/package.json
 	$(NM)/tsc --build
 
 node_modules/.yarn-integrity: yarn.lock
@@ -16,3 +16,9 @@ yarn.lock: package.json
 
 clean:
 	rm -rf node_modules dist yarn-error.log
+
+dist:
+	mkdir -p $@
+
+dist/package.json: package.json | dist
+	jq 'del(.private, .devDependencies, .scripts, .eslintConfig, .babel)' $< > $@
