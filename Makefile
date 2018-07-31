@@ -20,10 +20,10 @@ clean:
 dist:
 	mkdir -p $@
 
-dist/LICENSE: LICENSE | $(DISTDIRS)
+dist/LICENSE: LICENSE | dist
 	cp $< $@
 
-dist/README.md: README.md | $(DISTDIRS)
+dist/README.md: README.md | dist
 	cp $< $@
 
 dist/package.json: package.json | dist
