@@ -3,7 +3,7 @@ MAKEFLAGS += --no-builtin-rules
 NM := node_modules/.bin
 .PHONY: build clean test
 
-build: node_modules/.yarn-integrity dist/package.json
+build: node_modules/.yarn-integrity dist/package.json dist/LICENSE dist/README.md
 	$(NM)/tsc --build
 
 node_modules/.yarn-integrity: yarn.lock
@@ -20,8 +20,17 @@ clean:
 dist:
 	mkdir -p $@
 
+dist/LICENSE: LICENSE | $(DISTDIRS)
+	cp $< $@
+
+dist/README.md: README.md | $(DISTDIRS)
+	cp $< $@
+
 dist/package.json: package.json | dist
 	jq 'del(.private, .devDependencies, .scripts, .eslintConfig, .babel)' $< > $@
 
 test:
 	$(NM)/ts-node tests/test
+
+publish: build
+	cd dist && npm publish
