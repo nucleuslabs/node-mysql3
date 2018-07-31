@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "importHelpers": false,
+        "inlineSources": true,
+        "noEmitOnError": true,
+        "pretty": true,
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "removeComments": true,
+        "preserveConstEnums": false,
+        "sourceMap": true,
+        "lib": ["es2017","esnext.asynciterable"],
+        "skipLibCheck": true,
+        "outDir": "dist",
+        "target": "ES2017",
+        "declaration": true,
+        "types" : ["node"]
+    },
+    "files": [
+        "src/DatabaseWrapper"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "name": "mysql3",
+    "version": "0.1.0",
+    "license": "UNLICENSED",
+    "private": true,
+    "main": "src/DatabaseWrapper.ts",
+    "dependencies": {
+        "@async-generators/from-emitter": "^0.3.0",
+        "mysql2": "^1.5.3"
+    },
+    "devDependencies": {
+        "@types/node": "^10.5.4",
+        "@types/mysql": "^2.15.5"
+    },
+    "engines": {
+        "node": ">=10"
+    },
+    "repository": {
+        "type": "hg",
+        "url": "https://bitbucket.org/nucleuslabs/mysql3"
+    },
+    "author": "NucleusLabs Information Technologies Inc."
+}
