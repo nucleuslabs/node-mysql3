@@ -1,4 +1,4 @@
-import {ResultPromise, StringMap} from './types';
+import {ResultPromise, TextRow} from './types';
 
 export default class ResultWrapper {
     result: ResultPromise;
@@ -7,7 +7,7 @@ export default class ResultWrapper {
         this.result = resultPromise;
     }
     
-    async fetchRow(): Promise<StringMap|null> {
+    async fetchRow(): Promise<TextRow|null> {
         // fetch one row and then release the connection rather than
         // waiting for all the rows?
         let [rows,fields] = await this.result;
@@ -16,7 +16,7 @@ export default class ResultWrapper {
         return rows[0];
     }
     
-    fetchAll(): Promise<StringMap[]> {
+    fetchAll(): Promise<TextRow[]> {
         return this.result.then(([rows, fields]) => rows);
     }
     
@@ -36,7 +36,7 @@ export default class ResultWrapper {
         return rows.map(r => r[name]);
     }
     
-    async fetchPairs(): Promise<StringMap> {
+    async fetchPairs(): Promise<TextRow> {
         let [rows,fields] = await this.result;
         if(fields.length !== 2) throw new Error("`fetchPairs` expects exactly 2 columns");
         if(!rows.length) return {};

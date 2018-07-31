@@ -55,7 +55,7 @@ export default function formatSql(this: EscapeFunctions, sqlQuery: string, value
                 return escapeId.call(this, values[p]);
             }
             let p = m.slice(1);
-            if (!hasOwnProperty.call(this, p)) {
+            if (!hasOwnProperty.call(values, p)) {
                 throw new Error(`Missing placeholder value ${p}`);
             }
             return escapeValue.call(this, values[p]);
@@ -66,6 +66,7 @@ export default function formatSql(this: EscapeFunctions, sqlQuery: string, value
 
 
     let formattedQuery = weave(sqlFrags, stringLiterals).join('');
+    // console.log(formattedQuery);
     // console.log(`${Chalk.bold('QUERY:')} ${formattedQuery}`);
     return formattedQuery;
 }

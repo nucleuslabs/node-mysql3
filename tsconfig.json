@@ -16,7 +16,9 @@
         "outDir": "dist",
         "target": "es2018",
         "declaration": true,
-        "types" : ["node"]
+        "types" : ["node"],
+        "resolveJsonModule": true,
+        "esModuleInterop": false
     },
     "files": [
         "src/DatabaseWrapper"

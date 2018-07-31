@@ -1,10 +1,10 @@
 // @ts-ignore
-import MySql from 'mysql2/promise';
+import * as MySql from 'mysql2/promise';
 import ResultWrapper from './ResultWrapper';
 import fromEmitter from '@async-generators/from-emitter';
 import formatSql from './formatSql';
 import {setDefaults} from './util';
-import {AnyObject, Field, QueryParams, ResultPromise} from './types';
+import {AnyObject, Field, QueryParams, ResultPromise, ResultSetHeader, StringMap} from './types';
 import {Pool, PoolConfig, TypeCast} from 'mysql';
 
 export function escapeIdString(id: string) {
@@ -12,8 +12,8 @@ export function escapeIdString(id: string) {
 }
 
 interface DatabaseOptions extends PoolConfig {
-    sqlMode: string|string[], 
-    foreignKeyChecks: boolean,
+    sqlMode?: string|string[], 
+    foreignKeyChecks?: boolean,
 }
 
 export default class DatabaseWrapper {
@@ -45,8 +45,7 @@ export default class DatabaseWrapper {
                 'PAD_CHAR_TO_FULL_LENGTH',
             ],
         });
-        // dump(options);
-        
+
         this.pool = MySql.createPool(options);
         
         if(sqlMode != null || foreignKeyChecks != null) {
@@ -68,7 +67,7 @@ export default class DatabaseWrapper {
         return new ResultWrapper(this.pool.query(sql, params));
     }
 
-    async exec(sql: string, params?: QueryParams) {
+    async exec(sql: string, params?: QueryParams): Promise<ResultSetHeader> {
         const [res] = await this.pool.query(sql, params);
         return res;
     }
@@ -84,7 +83,7 @@ export default class DatabaseWrapper {
         return escapeIdString(id);
     }
     
-    stream(sql: string, params?: QueryParams) {
+    stream(sql: string, params?: QueryParams): AsyncIterable<StringMap> {
         return fromEmitter(this.pool.pool.query(sql, params),{
             onNext: 'result',
             onError: 'error',

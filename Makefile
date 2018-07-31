@@ -22,3 +22,6 @@ dist:
 
 dist/package.json: package.json | dist
 	jq 'del(.private, .devDependencies, .scripts, .eslintConfig, .babel)' $< > $@
+
+test:
+	$(NM)/ts-node tests/test
