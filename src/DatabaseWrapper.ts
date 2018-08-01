@@ -19,8 +19,8 @@ interface DatabaseOptions extends PoolConfig {
 export default class DatabaseWrapper {
     pool: any;
 
-    constructor({sqlMode, foreignKeyChecks, ...options}: DatabaseOptions) {
-        setDefaults(options, {
+    constructor(options: DatabaseOptions) {
+        options = setDefaults(options, {
             timezone: 'UTC',
             queryFormat: formatSql,
             charset: 'utf8mb4_unicode_520_ci',
@@ -45,8 +45,10 @@ export default class DatabaseWrapper {
                 'PAD_CHAR_TO_FULL_LENGTH',
             ],
         });
+        
+        let {sqlMode, foreignKeyChecks, ...poolOptions} = options;
 
-        this.pool = MySql.createPool(options);
+        this.pool = MySql.createPool(poolOptions);
         
         if(sqlMode != null || foreignKeyChecks != null) {
             if(Array.isArray(sqlMode)) {
