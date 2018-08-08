@@ -18,6 +18,7 @@ interface DatabaseOptions extends PoolConfig {
 
 export default class DatabaseWrapper {
     pool: any;
+    pending: Set<Promise<any>>;
 
     constructor(options: DatabaseOptions) {
         options = setDefaults(options, {
@@ -49,6 +50,7 @@ export default class DatabaseWrapper {
         let {sqlMode, foreignKeyChecks, ...poolOptions} = options;
 
         this.pool = MySql.createPool(poolOptions);
+        this.pending = new Set;
         
         if(sqlMode != null || foreignKeyChecks != null) {
             if(Array.isArray(sqlMode)) {
@@ -65,13 +67,21 @@ export default class DatabaseWrapper {
         }
     }
 
-    query(sql: string, params?: QueryParams) {
-        return new ResultWrapper(this.pool.query(sql, params));
+    query(sql: string, params?: QueryParams): ResultWrapper {
+        const promise = this.pool.query(sql, params);
+        this.pending.add(promise);
+        promise.finally(() => this.pending.delete(promise));
+        return new ResultWrapper(promise);
     }
 
     async exec(sql: string, params?: QueryParams): Promise<ResultSetHeader> {
-        const [res] = await this.pool.query(sql, params);
-        return res;
+        const promise = this.pool.query(sql, params);
+        this.pending.add(promise);
+        try {
+            return (await promise)[0];
+        } finally {
+            this.pending.delete(promise);
+        }
     }
     
     escape(value: any): string {
@@ -91,6 +101,10 @@ export default class DatabaseWrapper {
             onError: 'error',
             onDone: 'end',
         });
+    }
+    
+    async waitForPending() {
+        await Promise.all(this.pending);
     }
 
     close(): void {

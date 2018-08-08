@@ -32,5 +32,5 @@ dist/package.json: package.json | dist
 test:
 	$(NM)/ts-node tests/test
 
-publish: build
+publish: build test
 	cd dist && npm publish

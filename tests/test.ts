@@ -40,6 +40,16 @@ async function main() {
         
         const del = await db.exec("delete from _mysql3_test");
         assert(del.affectedRows === 5);
+        
+        
+        db.query("select * from emr_client limit 10");
+        console.log(db.pending.size);
+        db.query("select * from emr_client_program limit 10");
+        console.log(db.pending.size);
+        /*await*/ db.exec("set @foo:=1");
+        console.log(db.pending.size);
+        await db.waitForPending();
+        console.log(db.pending.size);
     } finally {
         db.close();
     }
