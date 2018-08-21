@@ -17,8 +17,8 @@ interface DatabaseOptions extends PoolConfig {
 }
 
 export default class DatabaseWrapper {
-    pool: any;
-    pending: Set<Promise<any>>;
+    private readonly pool: any;
+    private readonly pending: Set<Promise<any>>;
 
     constructor(options: DatabaseOptions) {
         options = setDefaults(options, {
